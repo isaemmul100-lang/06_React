@@ -52,36 +52,32 @@ export default function Mission() {
   // TODO 2. 아래 5줄을 useReducer 한 줄로
   const [state, dispatch] = useReducer(signupReducer, initialState);
 
-  const canSubmit = name && email && password.length >= 4 && agree;
+  const canSubmit =
+    state.name &&
+    state.email &&
+    state.password.length >= 4 &&
+    state.agree;
 
   function handleSubmit(e) {
     e.preventDefault();
     if (!canSubmit) return;
-    setDone(true); // TODO 3
+    // setDone(true); // TODO 3
+    dispatch({ type: "submitted" });
   }
 
   function handleReset() {
     // TODO 3
-    // // 입력칸이 바뀔 때
-    // dispatch({ type: "changed", field: "칸 이름", value: state });
-
-    // // 동의 체크를 누를 때
-    // dispatch({ type: "toggled" });
-
-    // // 제출할 때
-    // dispatch({ type: "submitted" });
-
-    // // 초기화할 때
-    // dispatch({ type: "reset" });
+    // 초기화할 때
+    dispatch({ type: "reset" });
   }
 
-  if (done) {
+  if (state.done) {
     return (
       <article>
-        <h3>🎉 {name}님, 가입을 환영합니다!</h3>
-        <small>{email}</small>
+        <h3>🎉 {state.name}님, 가입을 환영합니다!</h3>
+        <small>{state.email}</small>
         <p>
-          <button onClick={handleReset}>다시 쓰기</button>
+          <button type="btn" onClick={handleReset}>다시 쓰기</button>
         </p>
       </article>
     );
@@ -94,30 +90,48 @@ export default function Mission() {
         <p>
           <input
             placeholder="이름"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={state.name}
+            onChange={(e) =>
+              dispatch({
+                type: "changed",
+                field: "name",
+                value: e.target.value,
+              })
+            }
           />
         </p>
         <p>
           <input
             placeholder="이메일"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={state.email}
+            onChange={(e) =>
+              dispatch({
+                type: "changed",
+                field: "email",
+                value: e.target.value,
+              })
+            }
           />
         </p>
         <p>
           <input
             type="password"
             placeholder="비밀번호 (4자 이상)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={state.password}
+            onChange={(e) =>
+              dispatch({
+                type: "changed",
+                field: "password",
+                value: e.target.value,
+              })
+            }
           />
         </p>
         <label>
           <input
             type="checkbox"
-            checked={agree}
-            onChange={() => setAgree(!agree)}
+            checked={state.agree}
+            onChange={() => dispatch({ type: "toggled" })}
           />{" "}
           약관에 동의합니다
         </label>
@@ -130,9 +144,7 @@ export default function Mission() {
       </form>
       <article>
         <small>현재 state</small>
-        <pre>
-          {JSON.stringify({ name, email, password, agree, done }, null, 2)}
-        </pre>
+        <pre>{JSON.stringify(state, null, 2)}</pre>
       </article>
     </div>
   );

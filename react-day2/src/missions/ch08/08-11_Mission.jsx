@@ -31,6 +31,10 @@ const user = {
   tags: ['React', 'Hooks', 'Vite'],
 }
 
+function formatDate(date) {
+  return new Date(date).toLocaleDateString();
+}
+
 function ProfileHeader() {
   return (
     <article>
@@ -45,7 +49,7 @@ function PostList() {
     <article>
       <b>최근 글</b>
       <ul>
-        {user.posts.map((post) => (
+        {user.posts?.map((post) => (
           <li key={post.id}>{post.title}</li>
         ))}
       </ul>
@@ -54,16 +58,16 @@ function PostList() {
 }
 
 function LevelBadge() {
-  return <p>등급: {user.level}</p>
+  return <p>등급: {user.level.name} {user.level.icon}</p>
 }
 
 function LikeButton() {
   const [liked, setLiked] = useState(false)
-  return <button onClick={setLiked(!liked)}>{liked ? '❤️ 좋아요 취소' : '🤍 좋아요'}</button>
+  return <button onClick={()=>setLiked(!liked)}>{liked ? '❤️ 좋아요 취소' : '🤍 좋아요'}</button>
 }
 
 function TagList() {
-  const items = user.tags.map((tag) => <li>#{tag}</li>)
+  const items = user.tags.map((tag) => <li key={tag}>#{tag}</li>)
   return <ul>{items}</ul>
 }
 

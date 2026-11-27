@@ -18,46 +18,74 @@
 // ✅ 확인: 동작은 똑같고, 찬성 · 반대가 서로 독립적으로 움직인다
 // 💡 Custom Hook은 "로직"을 공유하는 것. state는 부를 때마다 따로 생긴다
 // 📖 막히면: 08-9 예제 (hooks/useToggle.js, useInput.js)
-import { useState } from 'react'
+import { useState } from "react";
 
 // TODO 1. useCounter
+function useCounter(initialCount = 0) {
+  const [count, setCount] = useState(initialCount);
+
+  function increase() {
+    setCount(count + 1);
+  }
+
+  function decrease() {
+    const deCount = count - 1;
+    setCount(deCount <= 0 ? 0 : deCount);
+  }
+
+  function reset() {
+    setCount(initialCount);
+  }
+
+  return { count, increase, decrease, reset };
+}
 
 export default function Mission() {
   // TODO 2. 아래를 useCounter 두 줄로
-  const [yesCount, setYesCount] = useState(0)
-  const [noCount, setNoCount] = useState(0)
+  /* const [yesCount, setYesCount] = useState(0);
+  const [noCount, setNoCount] = useState(0);
 
   function increaseYes() {
-    setYesCount((prev) => prev + 1)
+    setYesCount((prev) => prev + 1);
   }
   function decreaseYes() {
-    setYesCount((prev) => Math.max(prev - 1, 0))
+    setYesCount((prev) => Math.max(prev - 1, 0));
   }
   function increaseNo() {
-    setNoCount((prev) => prev + 1)
+    setNoCount((prev) => prev + 1);
   }
   function decreaseNo() {
-    setNoCount((prev) => Math.max(prev - 1, 0))
+    setNoCount((prev) => Math.max(prev - 1, 0));
   }
   function resetAll() {
-    setYesCount(0)
-    setNoCount(0)
-  }
+    setYesCount(0);
+    setNoCount(0);
+  } */
+
+  const yes = useCounter();
+  const no = useCounter();
 
   return (
     <div>
       <h3>🗳️ 점심 메뉴 투표: 짜장면?</h3>
       <article>
-        👍 찬성 <b>{yesCount}</b>
-        <button onClick={increaseYes}>+</button>
-        <button onClick={decreaseYes}>-</button>
+        👍 찬성 <b>{yes.count}</b>
+        <button onClick={yes.increase}>+</button>
+        <button onClick={yes.decrease}>-</button>
       </article>
       <article>
-        👎 반대 <b>{noCount}</b>
-        <button onClick={increaseNo}>+</button>
-        <button onClick={decreaseNo}>-</button>
+        👎 반대 <b>{no.count}</b>
+        <button onClick={no.increase}>+</button>
+        <button onClick={no.decrease}>-</button>
       </article>
-      <button onClick={resetAll}>모두 초기화</button>
+      <button
+        onClick={() => {
+          yes.reset();
+          no.reset();
+        }}
+      >
+        모두 초기화
+      </button>
     </div>
-  )
+  );
 }
